@@ -1,5 +1,9 @@
 package com.agh.model;
 
+import com.agh.model.exception.BranchFullException;
+import com.agh.model.exception.DuplicateLaptopException;
+import com.agh.model.exception.LaptopNotFoundException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,13 +20,13 @@ public class Branch {
         this.laptopList = new ArrayList<>();
     }
 
-    public void addLaptop(Laptop laptop) {
+    public void addLaptop(Laptop laptop) throws BranchFullException, DuplicateLaptopException {
         if(laptopList.size() >= maxCapacity)
-            throw new IllegalArgumentException("Branch is full");
+            throw new BranchFullException("Branch is full");
 
         for (Laptop l : laptopList) {
             if(laptop.compareTo(l) == 0)
-                throw new IllegalArgumentException("This laptop has been already added");
+                throw new DuplicateLaptopException("This laptop has been already added");
         }
 
         laptopList.add(laptop);
@@ -57,19 +61,20 @@ public class Branch {
         Collections.sort(laptops, Laptop.compareByPrice());
         return laptops;
     }
-    public Laptop search(String model){
+    public Laptop search(String model) throws LaptopNotFoundException {
       Comparator<String> byModel = Comparator.naturalOrder();
         for (Laptop l : laptopList){
           if(byModel.compare(l.model, model) == 0){
               return l;
           }
       }
-        throw new IllegalArgumentException("Laptop with this model was not found");
+        throw new LaptopNotFoundException("Laptop with this model was not found");
     }
     public List<Laptop> searchPartial(String text){
         List<Laptop> foundLaptops = new ArrayList<>();
         for (Laptop l : laptopList) {
-            if((l.model).contains(text) || (l.brand).contains(text))
+            if(l.model.toLowerCase().contains(text.toLowerCase()) ||
+                    l.brand.toLowerCase().contains(text.toLowerCase()))
                 foundLaptops.add(l);
         }
         return foundLaptops;

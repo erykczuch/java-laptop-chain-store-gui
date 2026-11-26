@@ -1,10 +1,14 @@
 package com.agh.ui;
 
+import com.agh.app.StoreFacade;
+
 import javax.swing.*;
 
 public class StoreFrame extends JFrame {
     int CardLayout = 0;     // 0 - login, 1 - store
-    public StoreFrame() {
+    StoreFacade store;
+    public StoreFrame(StoreFacade store) {
+        this.store = store;
         setTitle("Store Manager");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 562);
@@ -16,7 +20,7 @@ public class StoreFrame extends JFrame {
 
     void changeStore(String role){
         getContentPane().removeAll();
-        add(new StorePanel(role, this));
+        add(new StorePanel(role, this, store));
         revalidate();
         repaint();
     }

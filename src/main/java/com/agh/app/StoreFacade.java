@@ -4,6 +4,9 @@ import com.agh.model.Branch;
 import com.agh.model.Laptop;
 import com.agh.model.LaptopCondition;
 import com.agh.model.StoreManager;
+import com.agh.model.exception.BranchFullException;
+import com.agh.model.exception.DuplicateLaptopException;
+import com.agh.model.exception.InvalidPriceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,7 @@ public class StoreFacade {
     public void removeBranch(String branch){
         store.removeBranch(branch);
     }
-    public void addLaptop(Branch branch, Laptop laptop){
+    public void addLaptop(Branch branch, Laptop laptop) throws BranchFullException, DuplicateLaptopException {
         branch.addLaptop(laptop);
     }
     public void removeLaptop(Branch branch, Laptop laptop){
@@ -36,7 +39,9 @@ public class StoreFacade {
     public void changeCondition(Branch branch, Laptop laptop, LaptopCondition condition){
         branch.changeCondition(laptop, condition);
     }
-    public void changePrice(Laptop laptop, double price){
+    public void changePrice(Laptop laptop, double price) throws InvalidPriceException {
+        if (price < 0)
+            throw new InvalidPriceException("Price cannot be negative");
         laptop.price = price;
     }
     public List<Branch> sortBranchesByLoad(boolean descending){
@@ -81,5 +86,8 @@ public class StoreFacade {
     }
     public void reserveLaptop(Laptop laptop){
         laptop.reserved = true;
+    }
+    public void cancelReservation(Laptop laptop){
+        laptop.reserved = false;
     }
 }

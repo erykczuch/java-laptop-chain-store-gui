@@ -1,5 +1,8 @@
 package com.agh.model;
 
+import com.agh.model.exception.BranchFullException;
+import com.agh.model.exception.LaptopNotFoundException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,13 +31,14 @@ public class StoreManager {
             System.out.println("Current capacity: " + ((double) b.laptopList.size() / b.maxCapacity) * 100 + "%");
         }
     }
-    public void transferLaptop(Laptop laptop, String fromBranch, String toBranch){
+    public void transferLaptop(Laptop laptop, String fromBranch, String toBranch)
+            throws BranchFullException, LaptopNotFoundException {
         Branch from = branches.get(fromBranch);
         Branch to = branches.get(toBranch);
         boolean found = false;
 
         if(to.laptopList.size() >= to.maxCapacity)
-            throw new IllegalArgumentException("Branch is full");
+            throw new BranchFullException("Branch is full");
         for (Laptop l : from.laptopList){
             if(l.serialNumber == laptop.serialNumber){
                 found = true;
@@ -42,7 +46,7 @@ public class StoreManager {
             }
         }
         if(!found)
-            throw new IllegalArgumentException("Laptop not found in the source branch");
+            throw new LaptopNotFoundException("Laptop not found in the source branch");
 
         to.laptopList.add(laptop);
         from.laptopList.remove(laptop);
