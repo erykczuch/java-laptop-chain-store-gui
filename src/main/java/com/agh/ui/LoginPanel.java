@@ -1,24 +1,22 @@
 package com.agh.ui;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class LoginPanel extends JPanel {
-    JButton clientButton = createButton("Log in as a client", 220, 200, 220, 50);
-    JButton workerButton = createButton("Log in as a worker", 560, 200, 220, 50);
-    LoginPanel(StoreFrame frame){
-        setBounds(0, 0, 1000, 562);
-        add(clientButton);
-        add(workerButton);
-        setLayout(null);
+    JButton clientButton = new JButton("Log in as a client");
+    JButton workerButton = new JButton("Log in as a worker");
+
+    LoginPanel(StoreFrame frame) {
+        setLayout(new GridBagLayout());
         setVisible(true);
+
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 120, 0));
+        buttons.add(clientButton);
+        buttons.add(workerButton);
+        add(buttons);
 
         clientButton.addActionListener(e -> frame.changeStore("client"));
         workerButton.addActionListener(e -> frame.changeStore("worker"));
-    }
-
-    JButton createButton(String text, int posX, int posY, int width, int height){
-        JButton button = new JButton(text);
-        button.setBounds(posX, posY, width, height);
-        return button;
     }
 }
